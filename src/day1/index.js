@@ -1,17 +1,25 @@
 const readfile = require('../helper/readfile');
 
 const solve = (lines) => {
-  let increase = 0;
-  let previous = null;
+  let calories = [];
+  let lastCaloriePack = 0;
 
-  for (let current = 0; current < lines.length; current++) {
-    if (previous !== null && lines[previous] < lines[current]) {
-      increase++;
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i]) {
+      lastCaloriePack += parseInt(lines[i], 10);
+    } else {
+      calories.push(lastCaloriePack);
+      lastCaloriePack = 0;
     }
-    previous = current;
   }
 
-  return increase;
+  if (lastCaloriePack > 0) {
+    calories.push(lastCaloriePack);
+  }
+
+  const sorted = calories.sort((a, b) => b - a);
+  return sorted[0] + sorted[1] + sorted[2];
 }
 
-console.log(solve(readfile(__dirname + '/example.txt')));
+const content = readfile(__dirname + '/riddle.txt');
+console.log(solve(content));
