@@ -1,25 +1,23 @@
 const readfile = require('../helper/readfile');
+const lines = readfile(__dirname + '/input.txt');
 
-const solve = (lines) => {
-  let calories = [];
-  let lastCaloriePack = 0;
+const elves = lines
+  .reduce(
+    (elves, line) => {
+      line ? elves[elves.length - 1] += parseInt(line) : elves.push(0);
+      return elves;
+    },
+    [0]
+  );
 
-  for (let i = 0; i < lines.length; i++) {
-    if (lines[i]) {
-      lastCaloriePack += parseInt(lines[i], 10);
-    } else {
-      calories.push(lastCaloriePack);
-      lastCaloriePack = 0;
-    }
-  }
+const max = Math.max(...elves);
+const greatestThree = [...elves]
+  .sort((a, b) => b - a)
+  .slice(0, 3)
+  .reduce(
+    (acc, curr) => acc + curr,
+    0
+  );
 
-  if (lastCaloriePack > 0) {
-    calories.push(lastCaloriePack);
-  }
-
-  const sorted = calories.sort((a, b) => b - a);
-  return sorted[0] + sorted[1] + sorted[2];
-}
-
-const content = readfile(__dirname + '/riddle.txt');
-console.log(solve(content));
+console.log('Part 1: ' + max);
+console.log('Part 2: ' + greatestThree);
