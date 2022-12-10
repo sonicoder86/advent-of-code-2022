@@ -1,42 +1,26 @@
 const readfile = require('../helper/readfile');
+const lines = readfile(__dirname + '/input.txt');
 
-function getPriority(char) {
-  let priority = char.charCodeAt();
-  return char === char.toLowerCase() ? priority - 96 : priority - 64 + 26
-}
+const getPriority = (char) => char === char.toLowerCase() ? char.charCodeAt() - 96 : char.charCodeAt() - 64 + 26;
 
-const solve = (lines) => {
-  let score = 0;
-  for (const line of lines) {
-    const middle = Math.floor(line.length / 2);
-    const before = line.substring(0, middle);
-    const after = line.substring(middle);
+const match = (first, second) => first.match(new RegExp('[' + second + ']', 'g'));
 
-    const matches = before.match(new RegExp('[' + after + ']', 'g'));
-    score += getPriority(matches[0]);
-  }
+const part1 = lines.reduce(
+  (acc, curr) => {
+    const before = curr.substring(0, curr.length / 2);
+    const after = curr.substring(curr.length / 2);
+    const matches = match(before, after);
 
-  return score;
-}
+    return acc + getPriority(matches[0]);
+  },
+  0
+);
 
 const solve2 = (lines) => {
-  const groups = [];
-  let currentGroup = [];
-  for (let i = 0; i < lines.length; i++) {
-    if (currentGroup.length < 3) {
-      currentGroup.push(lines[i])
-    } else {
-      groups.push(currentGroup);
-      currentGroup = [];
-      currentGroup.push(lines[i])
-    }
-  }
-  groups.push(currentGroup);
-
   let score = 0;
-  for (const group of groups) {
-    const matches1 = group[0].match(new RegExp('[' + group[1] + ']', 'g'));
-    const matches2 = group[0].match(new RegExp('[' + group[2] + ']', 'g'));
+  for (let i = 0; i < lines.length; i += 3) {
+    const matches1 = match(lines[i], lines[i + 1]);
+    const matches2 = match(lines[i], lines[i + 2]);
     const filtered = matches1.filter(value => matches2.includes(value));
 
     score += getPriority(filtered[0]);
@@ -45,6 +29,7 @@ const solve2 = (lines) => {
   return score;
 }
 
-const content = readfile(__dirname + '/riddle.txt');
-console.log(solve2(content));
+const part2 = solve2(lines);
 
+console.log('Part 1: ' + part1);
+console.log('Part 1: ' + part2);
