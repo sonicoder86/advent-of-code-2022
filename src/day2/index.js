@@ -1,4 +1,5 @@
 const readfile = require('../helper/readfile');
+const lines = readfile(__dirname + '/input.txt');
 
 // X for Rock, Y for Paper, and Z for Scissors
 const shapeScore = { X: 1, Y: 2, Z: 3 };
@@ -16,16 +17,22 @@ const chooseShape = {
   C: { X: 'Y', Y: 'Z', Z: 'X' },
 };
 
-const solve = (lines, outcome) => {
-  let score = 0;
-  for (const line of lines) {
-    let [a, b] = line.split(' ');
-    if (outcome) b = chooseShape[a][b];
-    score += shapeScore[b] + outcomeScore[a][b];
-  }
+const part1 = lines.reduce(
+  (acc, curr) => {
+    const [opponent, you] = curr.split(' ');
+    return acc + shapeScore[you] + outcomeScore[opponent][you];
+  },
+  0
+);
 
-  return score;
-}
+const part2 = lines.reduce(
+  (acc, curr) => {
+    let [opponent, you] = curr.split(' ');
+    you = chooseShape[opponent][you];
+    return acc + shapeScore[you] + outcomeScore[opponent][you];
+  },
+  0
+);
 
-const content = readfile(__dirname + '/riddle.txt');
-console.log(solve(content, true));
+console.log('Part 1: ' + part1);
+console.log('Part 2: ' + part2);

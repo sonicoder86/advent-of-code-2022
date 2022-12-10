@@ -10,8 +10,8 @@ const elves = lines
     [0]
   );
 
-const max = Math.max(...elves);
-const greatestThree = [...elves]
+const part1 = Math.max(...elves);
+const part2 = [...elves]
   .sort((a, b) => b - a)
   .slice(0, 3)
   .reduce(
@@ -19,5 +19,5 @@ const greatestThree = [...elves]
     0
   );
 
-console.log('Part 1: ' + max);
-console.log('Part 2: ' + greatestThree);
+console.log('Part 1: ' + part1);
+console.log('Part 2: ' + part2);
